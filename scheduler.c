@@ -52,18 +52,16 @@ static void scheduler() {
     if (!t->started) {
         t->started = 1;
 
-        if (setjmp(tasks[current_task].context) == 0) {
-            void *stack_top = (char *)t->stack + STACK_SIZE;
+        void *stack_top = (char *)t->stack + STACK_SIZE;
 
-            asm volatile (
-                "mov %0, %%rsp\n"      // define o topo da pilha
-                "mov %1, %%rdi\n"      // passa Task* no primeiro argumento (rdi)
-                "call *%2\n"           // chama task_wrapper
-                :
-                : "r"(stack_top), "r"(t), "r"(task_wrapper)
-                : "rsp", "rdi"
-            );
-        }
+        asm volatile (
+            "mov %0, %%rsp\n"      // define o topo da pilha
+            "mov %1, %%rdi\n"      // passa Task* no primeiro argumento (rdi)
+            "call *%2\n"           // chama task_wrapper
+            :
+            : "r"(stack_top), "r"(t), "r"(task_wrapper)
+            : "rsp", "rdi"
+        );
     } else {
         longjmp(t->context, 1);
     }
