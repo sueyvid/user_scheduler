@@ -9,8 +9,7 @@ static jmp_buf main_context;
 
 static void scheduler();
 
-static void task_wrapper() {
-    Task *t = &tasks[current_task];
+static void task_wrapper(Task *t) {
     t->entry_point(t->arg);
     t->state = TASK_TERMINATED;
     task_yield();
@@ -57,11 +56,12 @@ static void scheduler() {
             void *stack_top = (char *)t->stack + STACK_SIZE;
 
             asm volatile (
-                "mov %0, %%rsp\n"
-                "call *%1\n"
+                "mov %0, %%rsp\n"      // define o topo da pilha
+                "mov %1, %%rdi\n"      // passa Task* no primeiro argumento (rdi)
+                "call *%2\n"           // chama task_wrapper
                 :
-                : "r"(stack_top), "r"(task_wrapper)
-                : "rsp"
+                : "r"(stack_top), "r"(t), "r"(task_wrapper)
+                : "rsp", "rdi"
             );
         }
     } else {
