@@ -38,6 +38,24 @@ docker run -it --rm -v ${PWD}:/app user-scheduler
 
 ---
 
+## 🛑 Parando o Container
+
+Para finalizar o ambiente e sair do container interativo, você pode simplesmente pressionar:
+
+```bash
+CTRL + D
+```
+
+ou
+
+```bash
+exit
+```
+
+🔁 Como usamos a opção `--rm`, o container será automaticamente removido após sair, garantindo que o ambiente fique limpo.
+
+---
+
 ## 📂 Dentro do Container
 
 Uma vez dentro do container, navegue até a pasta `/app`, onde seus arquivos estão disponíveis:
